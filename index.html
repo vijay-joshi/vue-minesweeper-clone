@@ -6,132 +6,20 @@
     <title>Minesweeper with VueJS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
-	<style>
-		.isMine {
-			background-color:#ff0000;
-			color:#fff;
-		}
-		
-		td {
-			padding:0 !important;
-			width:30px;
-			height:30px;
-			display:inline-block;
-		}
-	</style>
+	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container" id="app">
 		<table class="table table-bordered text-center" v-if="renderGame">
 		  <tbody>
 			<tr v-for="(row, index) in gridSize" :key="index">
-			  <td v-for="(col, index) in gridSize" :key="index">{{populateCell(row, col)}}</td>
+			  <td v-for="(col, index) in gridSize" :key="index" @click="leftClick($event, row, col)" @click.right="rightClick($event,row, col)">{{populateCell(row, col)}}</td>
 			</tr>
 		  </tbody>
 		</table>
 	</div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script>
-        new Vue({
-            el: '#app',
-            data: {
-				gridSize: 8,
-				totalArr: [],
-				mineArr: [],
-				countMap: {},
-				renderGame: false
-            },
-			mounted () {
-				console.time('logic');
-				/*
-				 - place random mines
-				 - place numbers elsewhere
-				*/
-				let arr = Array.apply(null, {length: (this.gridSize * this.gridSize)}).map(Function.call, Number);
-				// shuffle this array
-				let shuffled = this.shuffleArray(arr);
-				
-				let map = [];
-				let map2 = {};
-				for (let i = 0, len = 64; i < len; i++) {
-					let key = shuffled[i];
-					map2[key] = { 
-						location: key,
-						mine: false,
-						count: 0
-					};
-					if (i < 10 ) {
-						map2[key].mine = true;
-					}
-				}
-				console.log(map2);
-				this.updateNeighbours(map2);
-				console.timeEnd('logic');
-				this.mineArr = map2;
-				this.renderGame = true;
-			},
-			methods: {
-				updateNeighbours (map) {
-					let gs = this.gridSize;
-					for (let property in map) {
-						// for each cell that is a mine, update the map with neighbour count
-						console.log(property, ' - ' ,map[property]);
-						let location = map[property].location;
-						if (map[property].mine) {
-							//top row
-							let index1 = location - (gs - 1);
-							console.log();
-							let index2 = location - (gs)
-							let index3  = location - (gs +1);
-
-							let index4 = location - 1;
-							// e dont check
-							let index6 = location + 1;
-
-							let index7 = location + (gs - 1);
-							let index8 = location + (gs);
-							let index9 = location + (gs + 1);
-							console.log(location, index1, index2, index3, index4, index6, index7, index8, index9);
-							this.updateCount(map, index1);
-							this.updateCount(map, index2);
-							this.updateCount(map, index3);
-							this.updateCount(map, index4);
-							this.updateCount(map, index6);
-							this.updateCount(map, index7);
-							this.updateCount(map, index8);
-							this.updateCount(map, index9);
-						}
-					}
-					console.table(map);
-				},
-				updateCount (map, index) {
-					if (map[index] !== undefined) {
-						map[index].count++;
-					}
-				},
-				populateCell (row, col) {
-					let location = ((row-1) * this.gridSize) + (col-1);
-					if (this.mineArr[location].mine) {
-						return '☀️';
-					}
-					return this.mineArr[location].count ? this.mineArr[location].count : '';
-				},
-				shuffleArray (array) {
-				  let i = 0
-					, j = 0
-					, temp = null
-
-				  for (i = array.length - 1; i > 0; i -= 1) {
-					j = Math.floor(Math.random() * (i + 1))
-					temp = array[i]
-					array[i] = array[j]
-					array[j] = temp
-				  }
-				  return array;
-				}
-			}
-        })
-    </script>
+	<script src="js/minesweeper.js"></script>
 </body>
 </html>

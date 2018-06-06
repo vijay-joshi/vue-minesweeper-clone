@@ -1,0 +1,12 @@
+	.isMine {
+		background-color:#ff0000;
+		color:#fff;
+	}
+	
+	td {
+		padding:0 !important;
+		width:30px;
+		height:30px;
+		display:inline-block;
+		cursor:pointer;
+	}
